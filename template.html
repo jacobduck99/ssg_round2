@@ -1,14 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{{ Title }}</title>
 
-  <!-- Only this one: your generator swaps %BASE_PATH% -->
+  <!-- CSS link -->
   <link href="/index.css" rel="stylesheet">
 
+  <!-- Inline‑link spacing -->
   <style>
-    /* spacing around inline links */
     a { margin: 0 0.3em; }
   </style>
 </head>
-
+<body>
+  <article>
+    {{ Content }}
+  </article>
+</body>
+</html>

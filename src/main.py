@@ -13,7 +13,7 @@ default_basepath = "/"
 
 def main():
 
-    basepath = default_basepath
+    base_path = default_basepath
 
     if len(sys.argv) > 1:
         base_path = sys.argv[1]
