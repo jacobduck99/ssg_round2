@@ -14,13 +14,15 @@ def extract_title(markdown):
     raise Exception("No header found")
 
 
-def generate_page(from_path, template_path, dest_path):
+def generate_page(from_path, template_path, dest_path, base_path):
     print(f"Generating page from {from_path} to {dest_path} using {template_path}")
     with open(from_path, "r") as data:
         contents = data.read().strip()  # Strip any extra spaces in markdown
 
     with open(template_path, "r") as data: 
         template = data.read()
+
+        template = template.replace("%BASE_PATH%", base_path)
 
     html_node = markdown_to_html_node(contents)
     html = html_node.to_html().strip()  # Strip whitespace from generated HTML
@@ -29,6 +31,8 @@ def generate_page(from_path, template_path, dest_path):
 
     final_html = template.replace("{{ Title }}", title).replace("{{ Content }}", html).strip()
 
+    final_html = final_html.replace('href="/', f'href="{base_path}').replace('src="/', f'src="{base_path}')
+    
     if not os.path.exists(dest_path):
         os.makedirs(os.path.dirname(dest_path), exist_ok=True)
 
@@ -39,10 +43,12 @@ def generate_page(from_path, template_path, dest_path):
 
 
 
-def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path, base_path):
 
     with open(template_path, "r") as f:
         template = f.read()
+
+        template = template.replace("%BASE_PATH%", base_path)
 
     if not os.path.exists(dest_dir_path):
         os.makedirs(dest_dir_path, exist_ok=True)
@@ -55,7 +61,7 @@ def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
         src_path = os.path.join(dir_path_content, entry)
         base_dest = os.path.join(dest_dir_path, entry)
         if os.path.isdir(src_path):
-            generate_pages_recursive(src_path, template_path, base_dest)
+            generate_pages_recursive(src_path, template_path, base_dest, base_path)
 
         elif entry.endswith(".md"):
             with open(src_path, "r") as f:
